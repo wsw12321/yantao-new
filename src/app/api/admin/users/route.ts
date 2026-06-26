@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getAuthContext } from '@/lib/auth';
-import { PROFILE_TABLE } from '@/lib/config';
+import { isAllowedSiteOrigin, PROFILE_TABLE } from '@/lib/config';
 import { isAdminRole, type SiteRole } from '@/lib/profile';
-import { createSupabaseAdminClient } from '@/lib/supabase/admin';
+import { createBusinessSupabaseAdminClient } from '@/lib/supabase/admin';
 
 const ALLOWED_ROLES = new Set(['member', 'moderator', 'admin']);
 
@@ -17,7 +17,7 @@ export async function GET() {
     return NextResponse.json({ success: false, message: '权限不足' }, { status: 403 });
   }
 
-  const admin = createSupabaseAdminClient();
+  const admin = createBusinessSupabaseAdminClient();
   if (!admin) {
     return NextResponse.json({ success: false, message: 'Service role 未配置' }, { status: 503 });
   }
@@ -35,6 +35,10 @@ export async function GET() {
 }
 
 export async function PATCH(request: Request) {
+  if (!isAllowedSiteOrigin(request)) {
+    return NextResponse.json({ success: false, message: '请求来源不被允许' }, { status: 403 });
+  }
+
   const auth = await getAuthContext();
 
   if (!auth.user || !auth.profile) {
@@ -63,7 +67,7 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ success: false, message: '等级或金币数值不正确' }, { status: 400 });
   }
 
-  const admin = createSupabaseAdminClient();
+  const admin = createBusinessSupabaseAdminClient();
   if (!admin) {
     return NextResponse.json({ success: false, message: 'Service role 未配置' }, { status: 503 });
   }

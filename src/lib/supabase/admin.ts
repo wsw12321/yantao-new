@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
-import { getSupabaseAdminConfig } from '../config';
+import { getBusinessSupabaseAdminConfig } from '../config';
 
-export function createSupabaseAdminClient() {
-  const config = getSupabaseAdminConfig();
+export function createBusinessSupabaseAdminClient() {
+  const config = getBusinessSupabaseAdminConfig();
   if (!config) return null;
 
   return createClient(config.url, config.serviceRoleKey, {

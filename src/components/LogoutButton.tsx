@@ -2,7 +2,7 @@
 
 import { LogOut } from 'lucide-react';
 import { useState } from 'react';
-import { createSupabaseBrowserClient } from '@/lib/supabase/browser';
+import { createAuthBrowserClient } from '@/lib/supabase/browser';
 
 export default function LogoutButton() {
   const [pending, setPending] = useState(false);
@@ -10,7 +10,7 @@ export default function LogoutButton() {
   async function handleLogout() {
     setPending(true);
     try {
-      const supabase = createSupabaseBrowserClient();
+      const supabase = createAuthBrowserClient();
       await supabase.auth.signOut();
       await fetch('/api/logout', { method: 'POST' });
       window.location.href = '/';

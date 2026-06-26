@@ -86,7 +86,7 @@ export default async function DashboardPage() {
               <div className="mt-1 font-semibold text-slate-900">{auth.user.email || '未提供'}</div>
             </div>
             <div className="rounded-lg border border-blue-100 bg-blue-50 p-4 font-semibold text-blue-900">
-              登录凭证来自统一账号系统 `auth.wsw.wiki`；本站只保存独立展示资料。
+              登录凭证来自统一账号系统 `auth.water555.com`；本站只保存独立展示资料。
             </div>
           </div>
         </section>

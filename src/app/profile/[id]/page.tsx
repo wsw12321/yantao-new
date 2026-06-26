@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { Coins, ShieldCheck, UserRound } from 'lucide-react';
 import { PROFILE_TABLE } from '@/lib/config';
 import { getAuthContext } from '@/lib/auth';
-import { createSupabaseAdminClient } from '@/lib/supabase/admin';
+import { createBusinessSupabaseAdminClient } from '@/lib/supabase/admin';
 import { getLevelName, type SiteProfile } from '@/lib/profile';
 
 interface ProfilePageProps {
@@ -15,7 +15,7 @@ interface ProfilePageProps {
 export default async function PublicProfilePage({ params }: ProfilePageProps) {
   const { id } = await params;
   const auth = await getAuthContext();
-  const admin = createSupabaseAdminClient();
+  const admin = createBusinessSupabaseAdminClient();
 
   if (!admin) {
     return (

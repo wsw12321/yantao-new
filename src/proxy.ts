@@ -1,9 +1,9 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
-import { getSharedCookieOptions, getSupabasePublicConfig } from './lib/config';
+import { getAuthSupabasePublicConfig, getSharedCookieOptions } from './lib/config';
 
 export async function proxy(request: NextRequest) {
-  const config = getSupabasePublicConfig();
+  const config = getAuthSupabasePublicConfig();
 
   if (!config) {
     return NextResponse.next();

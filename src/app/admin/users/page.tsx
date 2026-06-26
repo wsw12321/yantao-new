@@ -3,7 +3,7 @@ import AdminUsersTable, { type AdminUserRow } from '@/components/AdminUsersTable
 import { getAuthContext } from '@/lib/auth';
 import { getLoginUrl, PROFILE_TABLE } from '@/lib/config';
 import { isAdminRole } from '@/lib/profile';
-import { createSupabaseAdminClient } from '@/lib/supabase/admin';
+import { createBusinessSupabaseAdminClient } from '@/lib/supabase/admin';
 
 export default async function AdminUsersPage() {
   const auth = await getAuthContext();
@@ -20,7 +20,7 @@ export default async function AdminUsersPage() {
     redirect('/dashboard');
   }
 
-  const admin = createSupabaseAdminClient();
+  const admin = createBusinessSupabaseAdminClient();
   const { data } = admin
     ? await admin
       .from(PROFILE_TABLE)

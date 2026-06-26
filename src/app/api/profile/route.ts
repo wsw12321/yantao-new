@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server';
 import { getAuthContext } from '@/lib/auth';
-import { PROFILE_TABLE } from '@/lib/config';
+import { isAllowedSiteOrigin, PROFILE_TABLE } from '@/lib/config';
 import { isValidUsername, normalizeBio, normalizeUsername } from '@/lib/profile';
 
 export async function PATCH(request: Request) {
+  if (!isAllowedSiteOrigin(request)) {
+    return NextResponse.json({ success: false, message: '请求来源不被允许' }, { status: 403 });
+  }
+
   const auth = await getAuthContext();
 
   if (!auth.configured || !auth.supabase) {

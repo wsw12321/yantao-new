@@ -5,7 +5,8 @@ export interface SupabasePublicConfig {
   anonKey: string;
 }
 
-export interface SupabaseAdminConfig extends SupabasePublicConfig {
+export interface BusinessSupabaseAdminConfig {
+  url: string;
   serviceRoleKey: string;
 }
 
@@ -13,28 +14,28 @@ function trimTrailingSlash(value: string) {
   return value.replace(/\/+$/, '');
 }
 
-export function getSupabasePublicConfig(): SupabasePublicConfig | null {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+export function getAuthSupabasePublicConfig(): SupabasePublicConfig | null {
+  const url = process.env.NEXT_PUBLIC_AUTH_SUPABASE_URL;
+  const anonKey = process.env.NEXT_PUBLIC_AUTH_SUPABASE_ANON_KEY;
 
   if (!url || !anonKey) return null;
   return { url, anonKey };
 }
 
-export function getSupabaseAdminConfig(): SupabaseAdminConfig | null {
-  const publicConfig = getSupabasePublicConfig();
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+export function getBusinessSupabaseAdminConfig(): BusinessSupabaseAdminConfig | null {
+  const url = process.env.BUSINESS_SUPABASE_URL || process.env.NEXT_PUBLIC_AUTH_SUPABASE_URL;
+  const serviceRoleKey = process.env.BUSINESS_SUPABASE_SERVICE_ROLE_KEY;
 
-  if (!publicConfig || !serviceRoleKey) return null;
-  return { ...publicConfig, serviceRoleKey };
+  if (!url || !serviceRoleKey) return null;
+  return { url, serviceRoleKey };
 }
 
 export function getAuthUrl() {
-  return trimTrailingSlash(process.env.NEXT_PUBLIC_AUTH_URL || 'https://auth.wsw.wiki');
+  return trimTrailingSlash(process.env.NEXT_PUBLIC_AUTH_URL || 'https://auth.water555.com');
 }
 
 export function getCookieDomain() {
-  return process.env.NEXT_PUBLIC_COOKIE_DOMAIN || '.wsw.wiki';
+  return process.env.NEXT_PUBLIC_COOKIE_DOMAIN || '.water555.com';
 }
 
 export function getSiteUrl() {
@@ -44,6 +45,10 @@ export function getSiteUrl() {
 
   if (process.env.VERCEL_URL) {
     return `https://${process.env.VERCEL_URL}`;
+  }
+
+  if (process.env.NODE_ENV === 'production') {
+    return 'https://yantao.water555.com';
   }
 
   return 'http://localhost:3000';
@@ -78,4 +83,15 @@ export function getSharedCookieOptions() {
     sameSite: 'lax' as const,
     secure: true,
   };
+}
+
+export function isAllowedSiteOrigin(request: Request) {
+  const origin = request.headers.get('origin');
+  if (!origin) return true;
+
+  try {
+    return new URL(origin).origin === new URL(getSiteUrl()).origin;
+  } catch {
+    return false;
+  }
 }

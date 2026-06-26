@@ -1,9 +1,9 @@
 import { cookies } from 'next/headers';
 import { createServerClient } from '@supabase/ssr';
-import { getSharedCookieOptions, getSupabasePublicConfig } from '../config';
+import { getAuthSupabasePublicConfig, getSharedCookieOptions } from '../config';
 
-export async function createSupabaseServerClient() {
-  const config = getSupabasePublicConfig();
+export async function createAuthServerClient() {
+  const config = getAuthSupabasePublicConfig();
   if (!config) return null;
 
   const cookieStore = await cookies();
