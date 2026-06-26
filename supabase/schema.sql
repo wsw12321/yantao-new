@@ -6,9 +6,21 @@ create table if not exists public.wsw_yantao_profiles (
   coins integer not null default 0 check (coins >= 0),
   avatar_url text,
   bio text not null default '',
+  titles text[] not null default '{}'::text[],
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+alter table public.wsw_yantao_profiles
+  add column if not exists titles text[];
+
+update public.wsw_yantao_profiles
+set titles = '{}'::text[]
+where titles is null;
+
+alter table public.wsw_yantao_profiles
+  alter column titles set default '{}'::text[],
+  alter column titles set not null;
 
 alter table public.wsw_yantao_profiles
   drop constraint if exists wsw_yantao_profiles_user_id_fkey;

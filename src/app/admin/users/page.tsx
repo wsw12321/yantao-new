@@ -24,7 +24,7 @@ export default async function AdminUsersPage() {
   const { data } = admin
     ? await admin
       .from(PROFILE_TABLE)
-      .select('user_id, username, role, level, coins, updated_at')
+      .select('user_id, username, role, level, coins, titles, updated_at')
       .order('updated_at', { ascending: false })
     : { data: [] };
 

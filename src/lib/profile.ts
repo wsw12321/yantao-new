@@ -11,11 +11,14 @@ export interface SiteProfile {
   coins: number;
   avatar_url: string | null;
   bio: string | null;
+  titles: string[];
   created_at: string;
   updated_at: string;
 }
 
 const USERNAME_PATTERN = /^[a-zA-Z0-9_\-\u4e00-\u9fa5]{1,24}$/;
+export const PROFILE_TITLE_LIMIT = 8;
+export const PROFILE_TITLE_MAX_LENGTH = 24;
 
 export function isValidUsername(username: string) {
   return USERNAME_PATTERN.test(username);
@@ -27,6 +30,29 @@ export function normalizeUsername(value: string) {
 
 export function normalizeBio(value: string) {
   return value.trim().slice(0, 160);
+}
+
+export function normalizeProfileTitles(value: unknown) {
+  if (!Array.isArray(value)) return null;
+
+  const titles: string[] = [];
+  const seen = new Set<string>();
+
+  for (const item of value) {
+    if (typeof item !== 'string') return null;
+
+    const title = item.trim();
+    if (!title) continue;
+    if (title.length > PROFILE_TITLE_MAX_LENGTH) return null;
+    if (seen.has(title)) continue;
+
+    seen.add(title);
+    titles.push(title);
+
+    if (titles.length > PROFILE_TITLE_LIMIT) return null;
+  }
+
+  return titles;
 }
 
 export function getLevelName(level: number) {
@@ -88,6 +114,7 @@ export async function ensureSiteProfile(
     coins: 0,
     avatar_url: null,
     bio: '',
+    titles: [],
   } satisfies Omit<SiteProfile, 'created_at' | 'updated_at'>;
 
   const { data: created, error: createError } = await supabase
@@ -97,6 +124,7 @@ export async function ensureSiteProfile(
       username: defaults.username,
       avatar_url: defaults.avatar_url,
       bio: defaults.bio,
+      titles: defaults.titles,
     })
     .select('*')
     .single();

@@ -40,6 +40,7 @@ export default async function PublicProfilePage({ params }: ProfilePageProps) {
 
   const profile = data as SiteProfile;
   const isOwner = auth.user?.id === profile.user_id;
+  const titles = Array.isArray(profile.titles) ? profile.titles : [];
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
@@ -54,6 +55,18 @@ export default async function PublicProfilePage({ params }: ProfilePageProps) {
               <div className="pb-2">
                 <h1 className="text-3xl font-black !text-white text-slate-900">{profile.username}</h1>
                 <p className="mt-1 font-bold text-blue-700">Lv.{profile.level} {getLevelName(profile.level)}</p>
+                {titles.length > 0 ? (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {titles.map((title) => (
+                      <span
+                        key={title}
+                        className="inline-flex items-center rounded-full border border-blue-100 bg-white px-3 py-1 text-xs font-black text-blue-800 shadow-sm"
+                      >
+                        {title}
+                      </span>
+                    ))}
+                  </div>
+                ) : null}
               </div>
             </div>
             {isOwner ? (

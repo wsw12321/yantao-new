@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getAuthContext } from '@/lib/auth';
 import { isAllowedSiteOrigin, PROFILE_TABLE } from '@/lib/config';
-import { isAdminRole, type SiteRole } from '@/lib/profile';
+import { isAdminRole, normalizeProfileTitles, type SiteRole } from '@/lib/profile';
 import { createBusinessSupabaseAdminClient } from '@/lib/supabase/admin';
 
 const ALLOWED_ROLES = new Set(['member', 'moderator', 'admin']);
@@ -24,7 +24,7 @@ export async function GET() {
 
   const { data, error } = await admin
     .from(PROFILE_TABLE)
-    .select('user_id, username, role, level, coins, updated_at')
+    .select('user_id, username, role, level, coins, titles, updated_at')
     .order('updated_at', { ascending: false });
 
   if (error) {
@@ -54,6 +54,7 @@ export async function PATCH(request: Request) {
     role?: SiteRole;
     level?: number;
     coins?: number;
+    titles?: unknown;
   } | null;
 
   if (!body?.user_id || !body.role || !ALLOWED_ROLES.has(body.role)) {
@@ -62,9 +63,14 @@ export async function PATCH(request: Request) {
 
   const level = Number(body.level);
   const coins = Number(body.coins);
+  const titles = normalizeProfileTitles(body.titles);
 
   if (!Number.isInteger(level) || level < 1 || level > 99 || !Number.isInteger(coins) || coins < 0) {
     return NextResponse.json({ success: false, message: '等级或金币数值不正确' }, { status: 400 });
+  }
+
+  if (!titles) {
+    return NextResponse.json({ success: false, message: '称号格式不正确' }, { status: 400 });
   }
 
   const admin = createBusinessSupabaseAdminClient();
@@ -78,10 +84,11 @@ export async function PATCH(request: Request) {
       role: body.role,
       level,
       coins,
+      titles,
       updated_at: new Date().toISOString(),
     })
     .eq('user_id', body.user_id)
-    .select('user_id, username, role, level, coins, updated_at')
+    .select('user_id, username, role, level, coins, titles, updated_at')
     .single();
 
   if (error) {

@@ -9,6 +9,7 @@ export interface AdminUserRow {
   role: string;
   level: number;
   coins: number;
+  titles: string[];
   updated_at: string;
 }
 
@@ -40,12 +41,17 @@ export default function AdminUsersTable({ users }: AdminUsersTableProps) {
           role: row.role,
           level: row.level,
           coins: row.coins,
+          titles: row.titles,
         }),
       });
 
       const payload = await response.json();
       if (!response.ok) {
         throw new Error(payload.message || '保存失败');
+      }
+
+      if (payload.user) {
+        updateRow(row.user_id, payload.user);
       }
 
       setStatus(`已更新 ${row.username}`);
@@ -67,13 +73,14 @@ export default function AdminUsersTable({ users }: AdminUsersTableProps) {
   return (
     <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[760px] text-left text-sm">
+        <table className="w-full min-w-[980px] text-left text-sm">
           <thead className="bg-slate-50 text-xs uppercase text-slate-500">
             <tr>
               <th className="px-4 py-3">用户</th>
               <th className="px-4 py-3">Role</th>
               <th className="px-4 py-3">等级</th>
               <th className="px-4 py-3">金币</th>
+              <th className="px-4 py-3">称号</th>
               <th className="px-4 py-3">更新时间</th>
               <th className="px-4 py-3">操作</th>
             </tr>
@@ -113,6 +120,15 @@ export default function AdminUsersTable({ users }: AdminUsersTableProps) {
                     value={row.coins}
                     onChange={(event) => updateRow(row.user_id, { coins: Number(event.target.value) })}
                     className="focus-ring w-24 rounded-lg border border-slate-200 px-2 py-2 font-bold text-slate-800"
+                  />
+                </td>
+                <td className="px-4 py-3">
+                  <textarea
+                    value={(row.titles || []).join('\n')}
+                    onChange={(event) => updateRow(row.user_id, { titles: event.target.value.split('\n') })}
+                    rows={3}
+                    placeholder="一行一个称号"
+                    className="focus-ring w-56 resize-y rounded-lg border border-slate-200 px-3 py-2 font-semibold leading-6 text-slate-800 placeholder:text-slate-400"
                   />
                 </td>
                 <td className="px-4 py-3 text-xs font-semibold text-slate-500">

@@ -33,6 +33,7 @@ select
   role,
   level,
   coins,
+  titles,
   created_at,
   updated_at
 from public.wsw_yantao_profiles
