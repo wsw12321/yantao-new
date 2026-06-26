@@ -1,25 +1,30 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { BookOpen, Compass, Sparkles, UsersRound } from 'lucide-react';
+import { ArrowRight, BookOpen, Compass, Sparkles, UsersRound } from 'lucide-react';
 
 function SectionCard({
   id,
   icon,
   title,
+  action,
   children,
 }: {
   id?: string;
   icon: React.ReactNode;
   title: string;
+  action?: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
     <section id={id} className="scroll-mt-24 glass-panel rounded-xl p-6 sm:p-8">
-      <div className="mb-4 flex items-center gap-3">
-        <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600 text-white">
-          {icon}
-        </span>
-        <h2 className="m-0 text-2xl font-black text-slate-900">{title}</h2>
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3">
+          <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600 text-white">
+            {icon}
+          </span>
+          <h2 className="m-0 text-2xl font-black text-slate-900">{title}</h2>
+        </div>
+        {action ? <div className="shrink-0 sm:ml-4">{action}</div> : null}
       </div>
       <div className="content-prose">{children}</div>
     </section>
@@ -82,7 +87,20 @@ export default function HomePage() {
       </section>
 
       <div className="space-y-8">
-        <SectionCard id="members" icon={<UsersRound className="h-5 w-5" />} title="发展历史与核心成员">
+        <SectionCard
+          id="members"
+          icon={<UsersRound className="h-5 w-5" />}
+          title="发展历史与核心成员"
+          action={(
+            <Link
+              href="/members"
+              className="focus-ring inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-black !text-white shadow-sm transition hover:bg-slate-700"
+            >
+              查看成员名单
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          )}
+        >
           <p>
             物理社最初由三水丁提出概念，研讨元年（公元2023年），五水牵头正式成立了研讨物理社。在社团内部，历届社长被称为“夸克”，而现任社长与副社长被称为“基本粒子”。
           </p>

@@ -46,20 +46,20 @@ export default async function PublicProfilePage({ params }: ProfilePageProps) {
       <div className="glass-panel overflow-hidden rounded-xl">
         <div className="h-36 bg-gradient-to-r from-blue-600 via-cyan-500 to-emerald-400" />
         <div className="px-6 pb-8 sm:px-8">
-          <div className="-mt-14 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div className="-mt-[4.75rem] flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div className="flex items-end gap-4">
               <div className="flex h-28 w-28 items-center justify-center rounded-2xl border-4 border-white bg-slate-900 text-4xl font-black text-white shadow-lg">
                 {profile.username.charAt(0).toUpperCase()}
               </div>
               <div className="pb-2">
-                <h1 className="text-3xl font-black text-slate-900">{profile.username}</h1>
+                <h1 className="text-3xl font-black !text-white text-slate-900">{profile.username}</h1>
                 <p className="mt-1 font-bold text-blue-700">Lv.{profile.level} {getLevelName(profile.level)}</p>
               </div>
             </div>
             {isOwner ? (
               <Link
                 href="/dashboard"
-                className="focus-ring inline-flex items-center justify-center rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-black text-white shadow-sm transition hover:bg-slate-700"
+                className="focus-ring inline-flex items-center justify-center rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-black !text-white shadow-sm transition hover:bg-slate-700"
               >
                 编辑资料
               </Link>
