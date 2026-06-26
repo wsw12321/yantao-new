@@ -50,6 +50,62 @@ img {
   letter-spacing: 0;
 }
 
+.content-prose h1.hero-gradient-title {
+  position: relative;
+  isolation: isolate;
+  display: inline-block;
+  width: fit-content;
+  max-width: 100%;
+  background: linear-gradient(118deg, #4c1d95 0%, #6d28d9 28%, #8b5cf6 52%, #a21caf 76%, #db2777 100%);
+  background-clip: text;
+  color: transparent;
+  font-family: "STXingkai", "FZYaoti", "KaiTi", "STKaiti", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+  font-size: 3.2rem;
+  font-style: italic;
+  font-weight: 900;
+  line-height: 0.98;
+  transform: skew(-5deg);
+  text-shadow:
+    1px 1px 0 rgba(255, 255, 255, 0.9),
+    3px 5px 0 rgba(76, 29, 149, 0.28),
+    7px 10px 18px rgba(109, 40, 217, 0.28),
+    0 18px 42px rgba(126, 34, 206, 0.34);
+  -webkit-background-clip: text;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.62);
+  -webkit-text-fill-color: transparent;
+}
+
+.content-prose h1.hero-gradient-title::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  content: attr(data-title);
+  color: rgba(76, 29, 149, 0.22);
+  transform: translate(0.12em, 0.12em);
+  text-shadow:
+    0.05em 0.05em 0 rgba(76, 29, 149, 0.36),
+    0.1em 0.1em 0 rgba(109, 40, 217, 0.28),
+    0.16em 0.18em 0 rgba(162, 28, 175, 0.2),
+    0.22em 0.24em 26px rgba(15, 23, 42, 0.2);
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.28);
+}
+
+@media (min-width: 640px) {
+  .content-prose h1.hero-gradient-title {
+    font-size: 4.4rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .content-prose h1.hero-gradient-title {
+    font-size: 5.6rem;
+  }
+}
+
+.content-prose a.hero-follow-link {
+  color: #ffffff;
+}
+
 .content-prose h2 {
   color: #10203a;
   font-size: clamp(1.45rem, 2.2vw, 2.1rem);

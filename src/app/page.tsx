@@ -35,7 +35,7 @@ export default function HomePage() {
             <Sparkles className="h-4 w-4" />
             Seminar Physics Club
           </div>
-          <h1>研讨物理社</h1>
+          <h1 className="hero-gradient-title" data-title="研讨物理社">研讨物理社</h1>
           <p className="text-xl font-semibold text-slate-600">
             一个唯心的唯物主义社团，面向所有喜爱物理并想要讨论的学生开放。
           </p>
@@ -45,7 +45,7 @@ export default function HomePage() {
           <div className="mt-7 flex flex-wrap gap-3">
             <Link
               href="#contact"
-              className="focus-ring inline-flex items-center justify-center rounded-lg bg-blue-600 px-5 py-3 text-sm font-black text-white shadow-sm transition hover:bg-blue-700"
+              className="hero-follow-link focus-ring inline-flex items-center justify-center rounded-lg bg-blue-600 px-5 py-3 text-sm font-black text-white shadow-sm transition hover:bg-blue-700"
             >
               关注我们
             </Link>
