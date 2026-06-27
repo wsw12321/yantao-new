@@ -81,7 +81,7 @@ export default function Navbar({ profile, configured }: NavbarProps) {
           ) : (
             <a
               href={loginUrl}
-              className="focus-ring inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-black text-white shadow-sm transition hover:bg-blue-700"
+              className="focus-ring inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-black !text-white shadow-sm transition hover:bg-blue-700"
             >
               登录 / 注册
             </a>
