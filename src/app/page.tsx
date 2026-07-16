@@ -135,7 +135,7 @@ export default function HomePage() {
             </figure>
           </div>
           <p>
-            社徽由三水丁设计并完善。左侧形似字母“Y”，代表受力分析图和坐标系；中间是一个静止在斜坡上的小滑块；右侧形似字母“T”。整体合起来代表“YT”（研讨）。
+            社徽由社员路由设计、三水丁完善。左侧形似字母“Y”，代表受力分析图和坐标系；中间是一个静止在斜坡上的小滑块；右侧形似字母“T”。整体合起来代表“YT”（研讨）。
           </p>
           <figure className="rounded-xl border border-slate-200 bg-white p-4">
             <Image
