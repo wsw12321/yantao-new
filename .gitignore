@@ -7,3 +7,7 @@ build/
 .env*.local
 *.log
 .DS_Store
+
+# Supabase local development state
+supabase/.branches/
+supabase/.temp/

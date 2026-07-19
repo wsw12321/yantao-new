@@ -5,6 +5,11 @@
   "packageManager": "pnpm@10.34.4",
   "scripts": {
     "dev": "next dev",
+    "dev:local": "node scripts/local-supabase.mjs dev admin",
+    "dev:local:member": "node scripts/local-supabase.mjs dev member",
+    "db:start": "node scripts/local-supabase.mjs start",
+    "db:stop": "node scripts/local-supabase.mjs stop",
+    "db:reset": "node scripts/local-supabase.mjs reset",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
@@ -24,6 +29,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
+    "supabase": "2.109.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

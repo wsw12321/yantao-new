@@ -1,4 +1,4 @@
--- Run after schema.sql to verify the business table is locked to service_role.
+-- Run after the migrations to verify the business table is locked to service_role.
 
 select
   c.relname as table_name,

@@ -37,7 +37,7 @@ In the same Supabase project:
 
 Run these SQL files in this Supabase project's SQL Editor:
 
-1. `supabase/schema.sql`
+1. `supabase/migrations/20260719000000_create_wsw_yantao_profiles.sql`
 2. `supabase/verify_setup.sql`
 
 Expected verification:
@@ -49,6 +49,32 @@ Expected verification:
 
 The table intentionally has no foreign key to `auth.users` and no `auth.uid()` policies even though both live in the same project.
 
+## Local Supabase Development
+
+The local development mode runs the complete Supabase stack locally, including Auth and Postgres. It does not mix local business data with remote Auth.
+
+Install Docker first. When using Docker Desktop from WSL, enable Docker Desktop's WSL integration for the current distribution and verify that `docker version` succeeds inside WSL.
+The local site intentionally binds to `http://localhost:3000` so its origin matches the Auth redirect configuration; free that port before starting it.
+
+Start Next.js with an automatically authenticated local user:
+
+```sh
+pnpm dev:local          # administrator
+pnpm dev:local:member   # regular member
+```
+
+The development runner starts Supabase, applies pending migrations, creates both local test users idempotently, and injects the local Supabase URL, anon key, and service-role key directly into the Next.js child process. It does not read local Supabase credentials from or rewrite `.env.local`, so the remote configuration in that file can remain in place for `pnpm dev`.
+
+Local database state persists across restarts. Manage it separately when needed:
+
+```sh
+pnpm db:start
+pnpm db:stop
+pnpm db:reset
+```
+
+`pnpm db:reset` deletes local data, reapplies all migrations, and recreates the administrator and member test users. In either automatic-login mode, signing out only clears the current session: the next request immediately signs in the selected test user again. Use plain `pnpm dev` to test real sign-in and sign-out behavior.
+
 ## First Admin
 
 1. Run both apps with real env vars.
@@ -59,7 +85,7 @@ The table intentionally has no foreign key to `auth.users` and no `auth.uid()` p
 
 After this, the user can open `/admin/users`.
 
-## App Environment
+## Remote App Environment
 
 `water5-auth`:
 
@@ -85,6 +111,8 @@ NEXT_PUBLIC_COOKIE_DOMAIN=.water555.com
 ```
 
 `BUSINESS_SUPABASE_URL` can be left blank in single-project mode; the code reuses `NEXT_PUBLIC_AUTH_SUPABASE_URL`. Set it explicitly only when business data moves to another Supabase project.
+
+These variables are for `pnpm dev` and deployed environments. The local development runner overrides the Supabase-related values in its child process without changing `.env.local`.
 
 ## Smoke Test
 

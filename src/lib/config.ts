@@ -10,6 +10,24 @@ export interface BusinessSupabaseAdminConfig {
   serviceRoleKey: string;
 }
 
+export interface LocalAutoLoginConfig {
+  userId: string;
+  email: string;
+  password: string;
+}
+
+export type LocalAutoLoginConfigState =
+  | { status: 'disabled' }
+  | { status: 'enabled'; config: LocalAutoLoginConfig }
+  | { status: 'invalid'; reason: string };
+
+const LOCAL_SUPABASE_HOSTS = new Set([
+  'localhost',
+  '127.0.0.1',
+  '::1',
+  '[::1]',
+]);
+
 function trimTrailingSlash(value: string) {
   return value.replace(/\/+$/, '');
 }
@@ -28,6 +46,73 @@ export function getBusinessSupabaseAdminConfig(): BusinessSupabaseAdminConfig | 
 
   if (!url || !serviceRoleKey) return null;
   return { url, serviceRoleKey };
+}
+
+function isLocalSupabaseUrl(value: string) {
+  try {
+    return LOCAL_SUPABASE_HOSTS.has(new URL(value).hostname.toLowerCase());
+  } catch {
+    return false;
+  }
+}
+
+export function getLocalAutoLoginConfig(): LocalAutoLoginConfigState {
+  const setting = process.env.LOCAL_AUTO_LOGIN?.trim().toLowerCase();
+
+  if (!setting || setting === 'false') {
+    return { status: 'disabled' };
+  }
+
+  if (setting !== 'true') {
+    return {
+      status: 'invalid',
+      reason: 'LOCAL_AUTO_LOGIN must be either true or false.',
+    };
+  }
+
+  if (process.env.NODE_ENV !== 'development') {
+    return {
+      status: 'invalid',
+      reason: 'LOCAL_AUTO_LOGIN is only available when NODE_ENV=development.',
+    };
+  }
+
+  const userId = process.env.LOCAL_AUTO_LOGIN_USER_ID?.trim();
+  const email = process.env.LOCAL_AUTO_LOGIN_EMAIL?.trim();
+  const password = process.env.LOCAL_AUTO_LOGIN_PASSWORD;
+
+  if (!userId || !email || !password) {
+    return {
+      status: 'invalid',
+      reason:
+        'LOCAL_AUTO_LOGIN_USER_ID, LOCAL_AUTO_LOGIN_EMAIL, and LOCAL_AUTO_LOGIN_PASSWORD are required.',
+    };
+  }
+
+  const authUrl = process.env.NEXT_PUBLIC_AUTH_SUPABASE_URL;
+  const businessUrl = process.env.BUSINESS_SUPABASE_URL;
+  const businessServiceRoleKey = process.env.BUSINESS_SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!authUrl || !businessUrl || !businessServiceRoleKey) {
+    return {
+      status: 'invalid',
+      reason:
+        'NEXT_PUBLIC_AUTH_SUPABASE_URL, BUSINESS_SUPABASE_URL, and BUSINESS_SUPABASE_SERVICE_ROLE_KEY are required for local auto-login.',
+    };
+  }
+
+  if (!isLocalSupabaseUrl(authUrl) || !isLocalSupabaseUrl(businessUrl)) {
+    return {
+      status: 'invalid',
+      reason:
+        'Local auto-login requires both Auth and Business Supabase URLs to use a loopback host.',
+    };
+  }
+
+  return {
+    status: 'enabled',
+    config: { userId, email, password },
+  };
 }
 
 export function getAuthUrl() {
